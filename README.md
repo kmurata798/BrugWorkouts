@@ -14,6 +14,11 @@ Clone this repository
 git clone git@github.com:kmurata798/BrugWorkouts.git
 ```
 
+Install dependencies
+```bash
+npm install
+```
+
 Run the application
 ```bash
 npm start
