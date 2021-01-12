@@ -1,6 +1,11 @@
 /* .card img {
     max-height: 180px;
-}
+}*/
 .card .card-text {
     color: rgba(8, 42, 152, 0.817);
-} */
+} 
+
+.price {
+    font-weight: bold;
+    font-size: 16px;
+}
