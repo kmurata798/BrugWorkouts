@@ -8,6 +8,9 @@ var expressHbs = require('express-handlebars')
 var mongoose = require('mongoose');
 var {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
 var session = require('express-session');
+var passport = require('passport');
+var flash = require('connect-flash');
+const { body, validationResult } = require('express-validator');
 
 var indexRouter = require('./routes/index');
 
@@ -17,6 +20,8 @@ mongoose.connect("mongodb://localhost:27017/BrugWorkoutsDB", {
   useUnifiedTopology: true,
   useNewUrlParser: true
 });
+//set up passport authentication
+require('./config/passport');
 
 // view engine setup
 // Added runtimeOptions to resolve "own property" error with hbs
@@ -31,9 +36,16 @@ app.use(logger('dev'));
 // bodyParser transforms data to allow our project to use the data
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+// app.use(validator());
 app.use(cookieParser());
 app.use(session({secret: 'mysecret', resave: false, saveUninitialized: false}));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
+// Set 'views' directory for any views 
+// being rendered res.render()
+app.set('views', path.join(__dirname, 'views'));
 
 app.use('/', indexRouter);
 
