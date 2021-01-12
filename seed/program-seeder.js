@@ -1,7 +1,7 @@
 var Program = require('../models/program');
 
 var mongoose = require('mongoose');
-
+// Run mongoose again since we are running seeder separately
 mongoose.connect('mongodb://localhost:27017/BrugWorkoutsDB', {
     useUnifiedTopology: true,
     useNewUrlParser: true
@@ -16,7 +16,7 @@ var programs = [
     }),
     new Program({
         imagePath: 'https://image.freepik.com/free-photo/mid-section-muscular-man-flexing-muscles_13339-297426.jpg',
-        title: 'Crafty Home Workouts',
+        title: 'Sculpture',
         description: 'Strictly build muscle, change your frame and make an internal/external difference on your body and well-being.',
         price: 50
     }),
@@ -27,6 +27,7 @@ var programs = [
         price: 50
     })
 ];
+// Save data into mongo and then disconnect.
 var done=0;
 for (var i = 0; i < programs.length; i++) {
     programs[i].save(function(err, result) {
