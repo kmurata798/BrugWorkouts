@@ -9,12 +9,16 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/programs"><i class="far fa-credit-card"></i> Programs</a>
         </li>
+        {{# if login }}
         <li class="nav-item">
           <a class="nav-link" href="/user/profile"><i class="far fa-user"></i> Profile</a>
+          <a class="nav-link justify-content-end" href="#">log out</a>
         </li>
+        {{ else }}
       </ul>
         <a class="nav-link justify-content-end" href="/user/signup">Sign up</a>
-        <a class="nav-link justify-content-end" href="#">Log in</a>
+        <a class="nav-link justify-content-end" href="#">Sign in</a>
+        {{/if}}
       </div>
     </div>
   </div>

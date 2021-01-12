@@ -12,7 +12,8 @@ var passport = require('passport');
 var flash = require('connect-flash');
 const { body, validationResult } = require('express-validator');
 
-var indexRouter = require('./routes/index');
+var indexRoute = require('./routes/index');
+var userRoute = require('./routes/user');
 
 var app = express();
 
@@ -47,7 +48,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 // being rendered res.render()
 app.set('views', path.join(__dirname, 'views'));
 
-app.use('/', indexRouter);
+app.use(function(req, res, next) {
+  res.locals.login = req.isAuthenticated();
+  next();
+})
+
+app.use('/', userRoute);
+app.use('/', indexRoute);
 
 
 // // catch 404 and forward to error handler
