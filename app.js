@@ -1,29 +1,45 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var expressHbs = require('express-handlebars')
-var mongoose = require('mongoose');
-var {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
-var session = require('express-session');
-var passport = require('passport');
-var flash = require('connect-flash');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const expressHbs = require('express-handlebars')
+const mongoose = require('mongoose');
+const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
+const session = require('express-session');
+const passport = require('passport');
+const flash = require('connect-flash');
 const { body, validationResult } = require('express-validator');
+const jwt = require('jsonwebtoken')
 
-var indexRoute = require('./routes/index');
-var userRoute = require('./routes/user');
+// Check if user is signedin
+let checkAuth = (req, res, next) => {
+  if (typeof req.cookies.api_token === "undefined" || req.cookies.api_token === null) {
+      req.user = null
+  } else {
+      let token = req.cookies.api_token
+      let decodedToken = jwt.decode(token, { complete: true }) || {}
+      req.user = decodedToken.payload
+  }
+  next()
+}
 
-var app = express();
+const app = express();
+// bodyParser transforms data to allow our project to use the data
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-mongoose.connect("mongodb://localhost:27017/BrugWorkoutsDB", {
-  useUnifiedTopology: true,
-  useNewUrlParser: true
-});
-//set up passport authentication
-require('./config/passport');
+app.use(cookieParser());
+app.use(checkAuth);
+// require DB
+require("./seed/db")
 
+const userRouter = require("./routes/user.js")
+const indexRouter = require("./routes/index.js")
+
+app.use('/users', userRouter)
+app.use('/', indexRouter)
 // view engine setup
 // Added runtimeOptions to resolve "own property" error with hbs
 app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs', runtimeOptions: {
@@ -34,11 +50,7 @@ app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs', runtime
 app.set('view engine', '.hbs');
 
 app.use(logger('dev'));
-// bodyParser transforms data to allow our project to use the data
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 // app.use(validator());
-app.use(cookieParser());
 app.use(session({secret: 'mysecret', resave: false, saveUninitialized: false}));
 app.use(flash());
 app.use(passport.initialize());
@@ -52,9 +64,6 @@ app.use(function(req, res, next) {
   res.locals.login = req.isAuthenticated();
   next();
 })
-
-app.use('/', userRoute);
-app.use('/', indexRoute);
 
 
 // // catch 404 and forward to error handler
@@ -71,6 +80,11 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+// START SERVER
+app.listen(8000, () => {
+  console.log('Brug Workouts listening on port http://localhost:8000');
 });
 
 module.exports = app;

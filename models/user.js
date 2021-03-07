@@ -1,19 +1,42 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var bcrypt = require('bcrypt-nodejs');
+const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 
-var userSchema = new Schema({
-    email: {type: String, required: true},
-    password: {type: String, required: true}
+const Schema = mongoose.Schema
+
+// const userSchema = new Schema({
+//   username: {
+//     type: 'String',
+//     required: true,
+//     trim: true,
+//     unique: true
+//   },
+//   password: {
+//     type: 'String',
+//     required: true,
+//     trim: true
+//   }
+// })
+
+const userSchema = new Schema({
+  email: {type: String, required: true},
+  password: {type: String, required: true}
 });
-// Create encrypted password
-userSchema.methods.encryptPassword = function(password) {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(5). null);
-};
-// Check if a password matches the hashed password
-userSchema.methods.validPassword = function(password) {
-    return bcrypt.compareSync(password, this.password);
-};
 
+userSchema.pre('save', async function(next) {
+  const user = this
+  if (!user.isModified || !user.isNew) {
+    next()
+  } else {
+    try {
+      const hashedPassword = await bcrypt.hash(user.password, 10)
+      user.password = hashedPassword
+      next()
+    } catch (err) {
+      next(err)
+    }
+  }
+})
 
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema)
+
+module.exports = User

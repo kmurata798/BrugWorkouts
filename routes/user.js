@@ -1,63 +1,62 @@
-var express = require('express');
-var router = express.Router();
-var csrf = require('csurf');
-var passport = require('passport');
+const User = require('../models/user')
+const router = require('express').Router()
+const userRoute = require('../routes/user')
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
+const { jwtSecret } = require('../vars')
 
-var csrfProtection = csrf();
-// Tell express that all routes in this router should be protected by CSRF
-router.use(csrfProtection);
-
-router.get('/profile', isLoggedIn, function (req, res, next) {
-    res.render('user/profile');
-});
-
-router.get('/logout', isLoggedIn, function(req, res, next) {
-    req.logout();
-    res.redirect('/');
+// USing JWT and Bcrypt
+// User logs in/signs up and then cookie is created
+// user can logout and cookie will be deleted
+router.get('/signup', (req, res) => {
+    res.render('user/signup')
 })
-// all routes that are under this router will check to see if not logged in
-router.get('/profile', notLoggedIn, function(req, res, next) {
-    res.render('user/profile');
-});
+router.post('/signup', async (req, res) => {
+    try {
+        console.log("req.body:", req.body)
+        const user =  await User.create(req.body)
 
-router.use('/', notLoggedIn, function(req, res, next) {
-    next();
-});
-
-router.get('/signup', function(req, res, next) {
-    var messages = req.flash('error');
-    res.render('/user/signup', {csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0});
-});
-
-router.post('/signup', passport.authenticate('local.signup', {
-    successRedircet: '/user/profile',
-    failureRedirect: '/user/signup',
-    failureFlash: true
-}));
-
-router.get('/signin', function(req, res, next) {
-    var messages = req.flash('error');
-    res.render('/user/signin', {csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0});
-});
-
-router.post('/signin', passport.authenticate('local.signin', {
-    successRedircet: '/user/profile',
-    failureRedirect: '/user/signin',
-    failureFlash: true
-}));
-
-module.exports = router;
-
-function isLoggedIn(req, res, next) {
-    if(req.isAuthenticated()) {
-        return next();
+        let payload = {email: user.email}
+        console.log('payload:', payload)
+        let secret = jwtSecret
+        let options = { expiresIn: '1d' }
+        let token = jwt.sign(payload, secret, options)
+        res.cookie('api_token', token, { maxAge: 900000, httpOnly: true })
+        res.redirect('/')
+    } catch (err) {
+        res.status(400).send({err: err.message})
     }
-    res.redirect('/');
-}
+})
+router.get('/login', (req, res) => {
+    res.render('user/login')
+})
+router.post('/login', async (req, res) => {
+    try {
+        if (req.user) return res.status(400).send({message: 'You are already logged in'})
 
-function notLoggedIn(req, res, next) {
-    if(!req.isAuthenticated()) {
-        return next();
+        const email = req.body.email
+        const password = req.body.password
+        const user = await User.findOne({email})
+        const match = await bcrypt.compare(password, user.password)
+        if (!match) return res.status(401).send({message: 'Could not log in using those credentials'})
+        
+        const payload = { user: user.email };
+        const secret = process.env.SECRET;
+        const options = { expiresIn: '1d' };
+        const token = jwt.sign(payload, secret, options);
+        res.cookie('api_token', token, { maxAge: 900000, httpOnly: true })
+        res.redirect('/')
+    
+    } catch (err) {
+        res.status(400).send({err: err.message})
     }
-    res.redirect('/');
-}
+})
+// There is an apitoken stuck even when im not logged in...
+router.get('/logout', (req, res) => {
+    if (!req.user) return res.status(401).send({message: 'You must be logged in to do that'})
+
+    res.clearCookie('api_token')
+    res.redirect('/')
+})
+
+module.exports = router
