@@ -10,4 +10,5 @@ const schema = new Schema({
     updatedOn: {type: Date, required: true, default: Date.now}
 });
 
-module.exports = mongoose.model('Program', schema);
+const Program = mongoose.model('Program', schema);
+module.exports = Program
