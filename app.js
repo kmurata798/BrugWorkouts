@@ -89,8 +89,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+const port = process.env.PORT || 8000
 // START SERVER
-app.listen(8000, () => {
+app.listen(port, () => {
   console.log('Brug Workouts listening on port http://localhost:8000');
 });
 
