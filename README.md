@@ -23,5 +23,10 @@ Run the application
 ```bash
 npm start
 ```
+
+# Run w/ Docker
+```bash
+docker-compose up
+```
 ## Contributors
 [Kento Murata](https://github.com/kmurata798)

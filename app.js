@@ -3,8 +3,8 @@ const express = require('express');
 const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const expressHbs = require('express-handlebars')
+// const bodyParser = require('body-parser'); // bodyParser is built into express
+const expressHbs = require('express-handlebars');
 const mongoose = require('mongoose');
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
 const session = require('express-session');
@@ -27,19 +27,26 @@ let checkAuth = (req, res, next) => {
 
 const app = express();
 // bodyParser transforms data to allow our project to use the data
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// Changed bodyParser to 'express' since it does the same thing.
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 app.use(cookieParser());
 app.use(checkAuth);
+
+
 // require DB
 require("./seed/db")
 
 const userRouter = require("./routes/user.js")
+const programsRouter = require("./routes/programs.js")
 const indexRouter = require("./routes/index.js")
 
 app.use('/users', userRouter)
+app.use('/programs', programsRouter)
 app.use('/', indexRouter)
+
+
 // view engine setup
 // Added runtimeOptions to resolve "own property" error with hbs
 app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs', runtimeOptions: {

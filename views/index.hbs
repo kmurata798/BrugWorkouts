@@ -1,19 +1,20 @@
 <!-- Background image -->
-  <div
-    class="p-5 text-center bg-image"
-    style="
-      background-image: url('https://www.wallpapertip.com/wmimgs/4-41142_justin-maller-wallpapers-wolverine.jpg');
-      height: 500px;
-    "
-  >
-    <div class="mask" style="background-color: rgba(0, 0, 0, 0.6)">
-      <div class="d-flex justify-content-center align-items-center h-100">
-        <div class="text-white">
+<div
+  class="p-5 text-center bg-image"
+  style="
+    background-image: url('https://www.wallpapertip.com/wmimgs/4-41142_justin-maller-wallpapers-wolverine.jpg');
+    height: 500px;">
+
+  <div class="mask" style="background-color: rgba(0, 0, 0, 0.6)">
+    <div class="d-flex justify-content-center align-items-center h-100">
+      <div class="text-white">
+        {{#if user}}
+          Welcome Back {{user.email}}!
+        {{else}}
           <h1 class="mb-3">Welcome to {{title}}!</h1>
           <h4 class="mb-3"> These sequences of workouts are for you</h4>
-          <a class="btn btn-outline-light btn-lg" href="/signup" role="button"
-            >Start today!</a
-          >
+          <a class="btn btn-outline-light btn-lg" href="/users/signup" role="button"
+            >Start today!</a>
         </div>
       </div>
     </div>
@@ -30,3 +31,4 @@
 
 
 <p>Your training should always be designed around your goals, experiences, and more importantly your personal decisions. Designing this program, I have crafted this workout program for you, showing the most efficient way to build quality muscle. The term “simple but effective” is extremely accurate. You want to get in and out and not waste any of your time in the gym. No more program hopping because here, you are able to choose what you want while still getting the results you deserve. It's all up to you. I am able to give you an arsenal of exercises for you to try and customize. </p>
+{{/if}}

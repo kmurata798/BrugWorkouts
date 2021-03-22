@@ -1,12 +1,13 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var schema = new Schema({
+const schema = new Schema({
     imagePath: {type: String, required: true},
     title: {type: String, required: true},
     description: {type: String, required: true},
-    price: {type: String, required: true}
+    price: {type: String, required: true},
+    updatedOn: {type: Date, required: true, default: Date.now}
 });
 
 module.exports = mongoose.model('Program', schema);

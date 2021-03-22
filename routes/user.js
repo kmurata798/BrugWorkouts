@@ -5,6 +5,27 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const { jwtSecret } = require('../vars')
 
+router.get('/profile',(req, res) => {
+    res.render('user/profile', { user: req.user });
+});
+router.post('/profile', async (req, res) => {
+    try {
+        console.log("req.body:", req.body.email)
+        // const userEmail = 
+        // const user =  await User.create(req.body)
+
+        // let payload = {email: user.email}
+        // console.log('payload:', payload)
+        // let secret = jwtSecret
+        // let options = { expiresIn: '1d' }
+        // let token = jwt.sign(payload, secret, options)
+        // res.cookie('api_token', token, { maxAge: 900000, httpOnly: true })
+        res.redirect('/')
+    } catch (err) {
+        res.status(400).send({err: err.message})
+    }
+})
+
 // USing JWT and Bcrypt
 // User logs in/signs up and then cookie is created
 // user can logout and cookie will be deleted
