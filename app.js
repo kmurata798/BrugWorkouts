@@ -40,10 +40,12 @@ require("./seed/db")
 
 const userRouter = require("./routes/user.js")
 const programsRouter = require("./routes/programs.js")
+const exerciseRouter = require("./routes/exercises.js")
 const indexRouter = require("./routes/index.js")
 
 app.use('/users', userRouter)
 app.use('/programs', programsRouter)
+app.use('/exercises', exerciseRouter)
 app.use('/', indexRouter)
 
 

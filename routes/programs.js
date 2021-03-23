@@ -1,6 +1,5 @@
-const express = require('express')
-const router = express.Router()
-var Program = require('../models/program')
+const Program = require('../models/program')
+const router = require('express').Router()
 
 router.get('/', function(req, res, next) {
     Program.find(function(err, docs) {
@@ -13,9 +12,10 @@ router.get('/', function(req, res, next) {
       res.render('programs/programs-show', { title: 'Brug Workouts', programs: programChunks, user:req.user });
     });
 });
-
+// I want to display exercises when the user clicks the program
+// should i create a new views for exercises? or do everything on programs views instead???
 router.get('/crafty', function(req, res, next) {
-    res.render('programs/crafty');
+    res.render('exercises/crafty');
   });
 // Getting all
 router.get('/test', (req, res) => {

@@ -1,25 +1,12 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
-const Schema = mongoose.Schema
-
-// const userSchema = new Schema({
-//   username: {
-//     type: 'String',
-//     required: true,
-//     trim: true,
-//     unique: true
-//   },
-//   password: {
-//     type: 'String',
-//     required: true,
-//     trim: true
-//   }
-// })
-
-const userSchema = new Schema({
-  email: {type: String, required: true},
-  password: {type: String, required: true}
+// User Mongoose schema
+const userSchema = new mongoose.Schema({
+  email: {type: String, required: [true, 'A User must have an email']},
+  password: {type: String, required: true},
+  imagePath: { type: String },
+  isAdmin: {type: Boolean, default: false}
 });
 
 userSchema.pre('save', async function(next) {
@@ -37,6 +24,18 @@ userSchema.pre('save', async function(next) {
   }
 })
 
+// Create User model using the schema created
 const User = mongoose.model('User', userSchema)
+
+// const testUser = new User({
+//   email: 'tester@gmail.com',
+//   password: 'tester'
+// })
+
+// testUser.save().then(doc => {
+//   console.log(doc);
+//   }).catch(err => {
+//       console.log('ERROR 😂', err);
+//   });
 
 module.exports = User

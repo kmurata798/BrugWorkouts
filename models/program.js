@@ -1,14 +1,15 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;
 
-const schema = new Schema({
-    imagePath: {type: String, required: true},
-    title: {type: String, required: true},
+// Program Mongoose schema
+const programSchema = new mongoose.Schema({
+    title: {type: String, required: [true, 'A program must have a title']},
     description: {type: String, required: true},
     price: {type: String, required: true},
+    imagePath: {type: String, required: true},
     updatedOn: {type: Date, required: true, default: Date.now}
 });
 
-const Program = mongoose.model('Program', schema);
+// Create Program model using the schema created
+const Program = mongoose.model('Program', programSchema);
 module.exports = Program
