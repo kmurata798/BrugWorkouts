@@ -6,21 +6,15 @@ const bcrypt = require('bcrypt')
 const { jwtSecret } = require('../vars')
 
 router.get('/profile',(req, res) => {
+    console.log("hi")
     res.render('user/profile', { user: req.user });
 });
-router.post('/profile', async (req, res) => {
-    try {
-        console.log("req.body:", req.body.email)
-        // const userEmail = 
-        // const user =  await User.create(req.body)
 
-        // let payload = {email: user.email}
-        // console.log('payload:', payload)
-        // let secret = jwtSecret
-        // let options = { expiresIn: '1d' }
-        // let token = jwt.sign(payload, secret, options)
-        // res.cookie('api_token', token, { maxAge: 900000, httpOnly: true })
-        res.redirect('/')
+router.get('/edit-profile', async (req, res) => {
+    try {
+        hi
+        console.log("req.body:", req.body.email)
+        res.render('user/profile-edit')
     } catch (err) {
         res.status(400).send({err: err.message})
     }

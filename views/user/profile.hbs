@@ -2,20 +2,22 @@
     <div class="col-md-4 col-md-offset-4">
         <h1>User Profile</h1>
 
-        <form action="/users/profile" method="post">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" class="form-control">
+
+        <div class="row justify-content-around pt-5">
+            <div class="col-4">
+                <div class="card" style="width: 25rem;">
+                    <img src="{{ User.imagePath }}" class="card-img-top" alt="..." class="img-reponsive">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ exercises.title }}</h5>
+                        <p class="card-text">{{ exercises.description }}</p>
+                        <p class="card-text">{{ exercises.content }}</p>
+                        <div class="clearfix">
+                            <a href="/user/edit-profile" class="btn btn-primary pull-right">Edit</a>
+                            {{!-- <a href="#" class="btn btn-success">Buy Now</a> --}}
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="email">E-Mail</label>
-                <input type="text" id="email" name="email" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-primary">Save changes</button>
-        </form>
+        </div>
     </div>
 </div>
