@@ -5,7 +5,7 @@ Staying in shape can be more challenging today because of the COVID-19 quarantin
 
 - [npm](https://www.npmjs.com/get-npm)
 - [NodeJS](https://nodejs.org/en/download/)
-
+- [MongoDB](https://docs.mongodb.com/manual/installation/)
 
 # Installation
 
