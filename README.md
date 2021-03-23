@@ -25,7 +25,12 @@ Run the application
 npm start
 ```
 
-# Run w/ Docker
+# Run locally
+```bash
+npm run dev
+```
+
+# Run w/ Docker (not working properly)
 ```bash
 docker-compose up
 ```
