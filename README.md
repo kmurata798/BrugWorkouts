@@ -30,7 +30,7 @@ npm start
 npm run dev
 ```
 
-# Run w/ Docker (docker is not working properly)
+# Run w/ Docker (docker is not working properly right now)
 ```bash
 docker-compose up
 ```
